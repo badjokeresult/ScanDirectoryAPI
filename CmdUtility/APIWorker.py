@@ -1,28 +1,25 @@
 import requests
-import json
 
 
 class APIWorker:
     @staticmethod
     def create(report):
-        data = json.dumps(report)
         response = requests.post('http://127.0.0.1:8000/api/v1/scans/scan/create/', report)
         return response.ok
 
     @staticmethod
     def read(key):
         response = requests.get(f'http://127.0.0.1:8000/api/v1/scans/scan/detailed/{key}/')
-        return json.loads(response.json())
+        return response.json()
 
     @staticmethod
     def read_all():
         response = requests.get('http://127.0.0.1:8000/api/v1/scans/all/')
-        return json.loads(response.json())
+        return response.json()
 
     @staticmethod
     def update(key, report):
-        data = json.dumps(report)
-        response = requests.put(f'http://127.0.0.1:8000/api/v1/scans/scan/update/{key}/', json=data)
+        response = requests.put(f'http://127.0.0.1:8000/api/v1/scans/scan/update/{key}/', report)
         return response.ok
 
     @staticmethod

@@ -1,5 +1,5 @@
 import os
-from time import time
+from datetime import datetime
 from APIWorker import APIWorker
 
 
@@ -28,14 +28,14 @@ class Menu:
                 except ValueError:
                     print('Invalid command, retry')
                     continue
+            elif command == 'scan get /all':
+                self.read_all()
             elif command.startswith('scan get'):
                 try:
                     self.read(int(command.split()[-1]))
                 except ValueError:
                     print('Invalid command, retry')
                     continue
-            elif command == 'scan get /all':
-                self.read_all()
             elif command == 'quit':
                 return
             else:
@@ -82,12 +82,12 @@ class Menu:
             'rmrf_files': 0,
             'rundll_files': 0,
             'errors': 0,
-            'execution_time': 0.0,
+            'execution_time': '0:00:00',
             'is_completed': False
         }
 
         cnt = 0
-        start_time = time()
+        start_time = datetime.now()
         for file in files:
             try:
                 with open(file, encoding='utf-8') as f:
@@ -107,12 +107,10 @@ class Menu:
                     report['rundll_files'] += 1
                     break
             cnt += 1
-        end_time = time()
+        end_time = datetime.now()
 
-        float_time = end_time - start_time
-        hours, seconds = divmod(float_time * 60, 3600)
-        minutes, seconds = divmod(seconds, 60)
-        report['execution_time'] = f'{int(hours)}:{int(minutes)}:{int(seconds)}'
+        time = end_time - start_time
+        report['execution_time'] = str(time)
         report['is_completed'] = True if cnt == len(files) else False
         return report
 
@@ -149,6 +147,7 @@ class Menu:
             for report in reports:
                 for key, value in report.items():
                     print(f'{key}: {value}')
+                print()
             print('Scan reports were got successfully')
         else:
             print('Error occured while getting scan reports')
